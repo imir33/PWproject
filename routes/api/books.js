@@ -67,4 +67,43 @@ router.post(
   }
 );
 
+// @route    POST api/books/edit/:id
+// @desc     Edit a book
+// @access   Private
+router.post(
+  '/edit/:id',
+  [
+    auth,
+    [
+      check('title', 'Title is required').not().isEmpty(),
+      check('author', 'Author is required').not().isEmpty(),
+      check('numberOfPages', 'Number of pages is required').not().isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      let book = await Book.findById(req.params.id);
+
+      const { title, author, numberOfPages, currentPage } = req.body;
+
+      book.title = title;
+      book.author = author;
+      book.numberOfPages = numberOfPages;
+      book.currentPage = currentPage;
+
+      await book.save();
+
+      res.json(book);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
 module.exports = router;
