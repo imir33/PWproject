@@ -106,4 +106,28 @@ router.post(
   }
 );
 
+// @route    DELETE api/books/:id
+// @desc     Delete book by id
+// @access   Private
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({ msg: 'Book not found' });
+    }
+
+    if (book.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    await book.remove();
+
+    res.json({ msg: 'Book removed' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
