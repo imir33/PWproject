@@ -22,6 +22,16 @@ const BookSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  finished: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  rating: {
+    type: Number,
+    min: 0,
+    max: 5,
+  },
   date: {
     type: Date,
     default: Date.now,

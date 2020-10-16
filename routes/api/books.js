@@ -47,15 +47,27 @@ router.post(
     try {
       const user = await User.findById(req.user.id).select('-password');
 
-      const { title, author, numberOfPages, currentPage } = req.body;
+      const { title, author, numberOfPages, currentPage, finished, rating } = req.body;
 
-      const newBook = new Book({
-        user: req.user.id,
-        title: title,
-        author: author,
-        numberOfPages: Number.parseInt(numberOfPages),
-        currentPage: Number.parseInt(currentPage),
-      });
+      if (finished) {
+        var newBook = new Book({
+          user: req.user.id,
+          title: title,
+          author: author,
+          numberOfPages: Number.parseInt(numberOfPages),
+          currentPage: Number.parseInt(numberOfPages),
+          finished: true,
+          rating: Number.parseInt(rating),
+        });
+      } else {
+        var newBook = new Book({
+          user: req.user.id,
+          title: title,
+          author: author,
+          numberOfPages: Number.parseInt(numberOfPages),
+          currentPage: Number.parseInt(currentPage),
+        });
+      }
 
       const book = await newBook.save();
 
