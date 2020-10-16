@@ -24,10 +24,10 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// @route    PUT api/friends/:email
+// @route    PUT api/friends/request/:email
 // @desc     Add friend by email
 // @access   Private
-router.put('/:email', auth, async (req, res) => {
+router.put('/request/:email', auth, async (req, res) => {
   try {
     const newFriend = await User.findOne({ email: req.params.email}).select('-password');
 
@@ -44,7 +44,11 @@ router.put('/:email', auth, async (req, res) => {
     }
     user.friends.push({ user: newFriend.id });
 
+    // Add current user to the newFried friends list
+    newFriend.friends.push({ user: user.id });
+
     await user.save();
+    await newFriend.save();
 
     res.json(user.friends);
   } catch (err) {
@@ -52,5 +56,13 @@ router.put('/:email', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+// @route    DELETE api/friends/delete/:email
+// @desc     Delete friend by email
+// @access   Private
+
+// @route    GET api/friends/books/:email
+// @desc     Get all books of a friend
+// @access   Private
 
 module.exports = router;
