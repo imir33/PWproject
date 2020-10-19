@@ -4,6 +4,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 
 const User = require('../../models/User');
+const Book = require('../../models/Book');
 
 // @route    GET api/friends
 // @desc     Get all friends of current user
@@ -103,5 +104,29 @@ router.delete('/delete/:id', auth, async (req, res) => {
 // @route    GET api/friends/books/:id
 // @desc     Get all books of a friend
 // @access   Private
+router.get('/books/:id', auth, async (req, res) => {
+  const user = await User.findById(req.user.id).select('-password');
+
+  if (!user) {
+    return res.status(404).json({ msg: 'User not found' });
+  }
+
+  if (user._id.toString() !== req.user.id) {
+    return res.status(401).json({ msg: 'User not authorized' });
+  }
+
+  var checkIfFriend = user.friends = user.friends.filter(
+    ({ user }) => user.toString() === req.params.id
+  );
+
+  if (!(Array.isArray(checkIfFriend) && checkIfFriend.length)) {
+    return res.status(400).json({ msg: 'The user is not a friend' });
+  }
+
+  const filter = { user: req.params.id };
+  const friendBooks = await Book.find(filter);
+
+  return res.json(friendBooks);
+});
 
 module.exports = router;
