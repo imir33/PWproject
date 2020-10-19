@@ -7,6 +7,7 @@ const config = require('config');
 const { check, validationResult } = require('express-validator');
 
 const User = require('../../models/User');
+const Book = require('../../models/Book');
 
 // @route    GET api/auth
 // @desc     Get Logged in User
@@ -91,6 +92,24 @@ router.delete('/', auth, async (req, res) => {
     if (user._id.toString() !== req.user.id) {
       return res.status(401).json({ msg: 'User not authorized' });
     }
+
+    // Delete all user reference ( friends  and books )
+    await Book.remove({ user: req.user.id });
+    user.friends.map(
+      async ({ user }) => {
+        var friend = await User.findById(user.toString()).select('-password');
+
+        if (!friend) {
+          return res.status(404).json({ msg: 'Friend not found' });
+        }
+      
+        friend.friends = friend.friends.filter(
+          ({ user }) => user.toString() !== req.user.id
+        )
+
+        await friend.save();
+      }
+    )
 
     await user.remove();
     res.json({ msg: 'User removed' });
