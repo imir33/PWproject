@@ -20,14 +20,14 @@ const UserSchema = new mongoose.Schema({
     default: Date.now,
   },
   avatar: {
-    type: String
+    type: String,
   },
   friends: [
     {
       user: {
-        type: Schema.Types.ObjectId
+        type: Schema.Types.ObjectId,
       },
-    }
+    },
   ],
 });
 

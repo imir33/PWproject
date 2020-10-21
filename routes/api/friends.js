@@ -18,7 +18,6 @@ router.get('/', auth, async (req, res) => {
     } else {
       res.send(user.friends);
     }
-
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -30,17 +29,21 @@ router.get('/', auth, async (req, res) => {
 // @access   Private
 router.put('/request/:email', auth, async (req, res) => {
   try {
-    const newFriend = await User.findOne({ email: req.params.email}).select('-password');
+    const newFriend = await User.findOne({ email: req.params.email }).select(
+      '-password'
+    );
 
     // Check if User exists
     if (!newFriend) {
-      return res.status(404).json({ msg: 'User not found' });  
+      return res.status(404).json({ msg: 'User not found' });
     }
 
     const user = await User.findById(req.user.id).select('-password');
 
     // Check if is not already friend of user
-    if (user.friends.some(friend => friend.user.toString() === newFriend.id)) {
+    if (
+      user.friends.some((friend) => friend.user.toString() === newFriend.id)
+    ) {
       return res.status(400).json({ msg: 'User already a friend' });
     }
     user.friends.push({ user: newFriend.id });
@@ -72,9 +75,9 @@ router.delete('/delete/:id', auth, async (req, res) => {
     return res.status(401).json({ msg: 'User not authorized' });
   }
 
-  var checkIfFriend = user.friends = user.friends.filter(
+  var checkIfFriend = (user.friends = user.friends.filter(
     ({ user }) => user.toString() === req.params.id
-  );
+  ));
 
   if (!(Array.isArray(checkIfFriend) && checkIfFriend.length)) {
     return res.status(400).json({ msg: 'The user is not a friend' });
@@ -92,13 +95,12 @@ router.delete('/delete/:id', auth, async (req, res) => {
 
   friend.friends = friend.friends.filter(
     ({ user }) => user.toString() !== req.user.id
-  )
+  );
 
   await user.save();
   await friend.save();
 
   return res.json(user.friends);
-
 });
 
 // @route    GET api/friends/books/:id
@@ -115,9 +117,9 @@ router.get('/books/:id', auth, async (req, res) => {
     return res.status(401).json({ msg: 'User not authorized' });
   }
 
-  var checkIfFriend = user.friends = user.friends.filter(
+  var checkIfFriend = (user.friends = user.friends.filter(
     ({ user }) => user.toString() === req.params.id
-  );
+  ));
 
   if (!(Array.isArray(checkIfFriend) && checkIfFriend.length)) {
     return res.status(400).json({ msg: 'The user is not a friend' });

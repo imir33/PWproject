@@ -84,7 +84,7 @@ router.post(
 router.delete('/', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
@@ -95,21 +95,19 @@ router.delete('/', auth, async (req, res) => {
 
     // Delete all user reference ( friends  and books )
     await Book.remove({ user: req.user.id });
-    user.friends.map(
-      async ({ user }) => {
-        var friend = await User.findById(user.toString()).select('-password');
+    user.friends.map(async ({ user }) => {
+      var friend = await User.findById(user.toString()).select('-password');
 
-        if (!friend) {
-          return res.status(404).json({ msg: 'Friend not found' });
-        }
-      
-        friend.friends = friend.friends.filter(
-          ({ user }) => user.toString() !== req.user.id
-        )
-
-        await friend.save();
+      if (!friend) {
+        return res.status(404).json({ msg: 'Friend not found' });
       }
-    )
+
+      friend.friends = friend.friends.filter(
+        ({ user }) => user.toString() !== req.user.id
+      );
+
+      await friend.save();
+    });
 
     await user.remove();
     res.json({ msg: 'User removed' });

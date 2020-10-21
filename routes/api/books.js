@@ -13,7 +13,7 @@ router.get('/', auth, async (req, res) => {
   try {
     const filter = { user: req.user.id };
     const books = await Book.find(filter);
-    
+
     if (typeof books === 'undefined' || books.length === 0) {
       return res.status(404).json({ msg: 'No books found for this user' });
     }
@@ -47,7 +47,15 @@ router.post(
     try {
       const user = await User.findById(req.user.id).select('-password');
 
-      const { title, author, numberOfPages, currentPage, finished, rating, numberOfDays} = req.body;
+      const {
+        title,
+        author,
+        numberOfPages,
+        currentPage,
+        finished,
+        rating,
+        numberOfDays,
+      } = req.body;
 
       if (finished) {
         var newBook = new Book({
@@ -113,7 +121,9 @@ router.post(
         book.finished = true;
         book.rating = Number.parseInt(req.body.rating);
         const numberOfMiliseconds = Math.abs(book.date - new Date());
-        const numberOfDays = Math.ceil(numberOfMiliseconds / (1000 * 60 * 60 * 24));
+        const numberOfDays = Math.ceil(
+          numberOfMiliseconds / (1000 * 60 * 60 * 24)
+        );
         book.numberOfDays = Number.parseInt(numberOfDays);
       }
 
