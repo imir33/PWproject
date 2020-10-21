@@ -29,8 +29,12 @@ const BookSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
-    min: 0,
+    min: 1,
     max: 5,
+  },
+  numberOfDays: {
+    type: Number,
+    default: 0,
   },
   date: {
     type: Date,

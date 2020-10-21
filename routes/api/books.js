@@ -47,7 +47,7 @@ router.post(
     try {
       const user = await User.findById(req.user.id).select('-password');
 
-      const { title, author, numberOfPages, currentPage, finished, rating } = req.body;
+      const { title, author, numberOfPages, currentPage, finished, rating, numberOfDays} = req.body;
 
       if (finished) {
         var newBook = new Book({
@@ -58,6 +58,7 @@ router.post(
           currentPage: Number.parseInt(numberOfPages),
           finished: true,
           rating: Number.parseInt(rating),
+          numberOfDays: Number.parseInt(numberOfDays),
         });
       } else {
         var newBook = new Book({
@@ -105,8 +106,16 @@ router.post(
 
       book.title = title;
       book.author = author;
-      book.numberOfPages = numberOfPages;
-      book.currentPage = currentPage;
+      book.numberOfPages = Number.parseInt(numberOfPages);
+      book.currentPage = Number.parseInt(currentPage);
+
+      if (currentPage === numberOfPages) {
+        book.finished = true;
+        book.rating = Number.parseInt(req.body.rating);
+        const numberOfMiliseconds = Math.abs(book.date - new Date());
+        const numberOfDays = Math.ceil(numberOfMiliseconds / (1000 * 60 * 60 * 24));
+        book.numberOfDays = Number.parseInt(numberOfDays);
+      }
 
       await book.save();
 
