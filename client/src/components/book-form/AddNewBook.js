@@ -1,16 +1,18 @@
 import React, { useState, Fragment } from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { connnect } from 'react-redux';
+import { connect, connnect } from 'react-redux';
+import { addNewBook } from '../../actions/books';
 
-const AddNewBook = (props) => {
+const AddNewBook = ({ addNewBook, history }) => {
   const [formData, setFormData] = useState({
     title: '',
     author: '',
-    numOfPages: '',
-    numOfCurrentPage: '',
+    numberOfPages: '',
+    currentPage: '',
     finished: false,
     rating: 0,
-    numOfDays: '',
+    numberOfDays: '',
   });
 
   const [displayRating, toggleRating] = useState(false);
@@ -18,18 +20,35 @@ const AddNewBook = (props) => {
   const {
     title,
     author,
-    numOfPages,
-    numOfCurrentPage,
+    numberOfPages,
+    currentPage,
     finished,
     rating,
-    numOfDays,
+    numberOfDays,
   } = formData;
 
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+      finished: displayRating,
+    });
+    console.log(formData);
+  };
 
-  const getFinishedValue = (e) => {
+  const onSubmit = (e) => {
+    e.preventDefault();
     setFormData({ ...formData, finished: displayRating });
+    addNewBook(formData, history);
+    setFormData({
+      title: '',
+      author: '',
+      numberOfPages: '',
+      currentPage: '',
+      finished: false,
+      rating: 0,
+      numberOfDays: '',
+    });
   };
 
   return (
@@ -37,7 +56,7 @@ const AddNewBook = (props) => {
       <h1 className='large text-primary'>Add a New Book</h1>
       <small>* = required fields</small>
 
-      <form className='form'>
+      <form className='form' onSubmit={(e) => onSubmit(e)}>
         <div className='form-group'>
           <input
             type='text'
@@ -45,7 +64,6 @@ const AddNewBook = (props) => {
             name='title'
             value={title}
             onChange={(e) => onChange(e)}
-            required
           />
         </div>
         <div className='form-group'>
@@ -55,17 +73,15 @@ const AddNewBook = (props) => {
             name='author'
             value={author}
             onChange={(e) => onChange(e)}
-            required
           />
         </div>
         <div className='form-group'>
           <input
             type='text'
             placeholder='* Number of Pages'
-            name='numOfPages'
-            value={numOfPages}
+            name='numberOfPages'
+            value={numberOfPages}
             onChange={(e) => onChange(e)}
-            required
           />
         </div>
         <div className='my-2'>
@@ -85,19 +101,19 @@ const AddNewBook = (props) => {
                 id='rating'
                 value={rating}
                 onChange={(e) => onChange(e)}>
-                <option value='one'>1</option>
-                <option value='two'>2</option>
-                <option value='three'>3</option>
-                <option value='four'>4</option>
-                <option value='five'>5</option>
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+                <option value='4'>4</option>
+                <option value='5'>5</option>
               </select>
             </div>
             <div className='form-group'>
               <input
                 type='text'
                 placeholder='* Number of Days it Took'
-                name='numOfDays'
-                value={numOfDays}
+                name='numberOfDays'
+                value={numberOfDays}
                 onChange={(e) => onChange(e)}
               />
             </div>
@@ -108,19 +124,14 @@ const AddNewBook = (props) => {
               <input
                 type='text'
                 placeholder='* Number of Current Page'
-                name='numOfCurrentPage'
-                value={numOfCurrentPage}
+                name='currentPage'
+                value={currentPage}
                 onChange={(e) => onChange(e)}
-                required
               />
             </div>
           </Fragment>
         )}
-        <input
-          onSubmit={(e) => getFinishedValue(e)}
-          type='submit'
-          className='btn btn-primary my-1'
-        />
+        <input type='submit' className='btn btn-primary my-1' />
         <a className='btn my-1' href='dashboard.html'>
           Go Back
         </a>
@@ -129,6 +140,8 @@ const AddNewBook = (props) => {
   );
 };
 
-AddNewBook.propTypes = {};
+AddNewBook.propTypes = {
+  addNewBook: PropTypes.func.isRequired,
+};
 
-export default AddNewBook;
+export default connect(null, { addNewBook })(withRouter(AddNewBook));

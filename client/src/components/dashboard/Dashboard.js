@@ -23,7 +23,12 @@ const Dashboard = ({
         <i className='fas fa-user'></i> Welcome {user && user.name}
       </p>
       {books !== null ? (
-        <Fragment>has</Fragment>
+        <Fragment>
+          <p>has</p>
+          <Link to='/add-new-book' className='btn btn-primary m-1'>
+            Add a New Book
+          </Link>
+        </Fragment>
       ) : (
         <Fragment>
           <p>You have no books added yet to your account</p>
