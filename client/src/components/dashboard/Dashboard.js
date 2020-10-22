@@ -1,14 +1,39 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Spinner from '../layout/Spinner';
 import { getBooksOfCurrent } from '../../actions/books';
 
-const Dashboard = ({ getBooksOfCurrent, auth, books }) => {
+const Dashboard = ({
+  getBooksOfCurrent,
+  auth: { user },
+  books: { books, loading },
+}) => {
   useEffect(() => {
     getBooksOfCurrent();
   }, [getBooksOfCurrent]);
 
-  return <div>Dashboard</div>;
+  return loading && books === null ? (
+    <Spinner />
+  ) : (
+    <Fragment>
+      <h1 className='large text-primary'>Dashboard</h1>
+      <p className='lead'>
+        <i className='fas fa-user'></i> Welcome {user && user.name}
+      </p>
+      {books !== null ? (
+        <Fragment>has</Fragment>
+      ) : (
+        <Fragment>
+          <p>You have no books added yet to your account</p>
+          <Link to='/add-new-book' className='btn btn-primary m-1'>
+            Add a New Book
+          </Link>
+        </Fragment>
+      )}
+    </Fragment>
+  );
 };
 
 Dashboard.propTypes = {

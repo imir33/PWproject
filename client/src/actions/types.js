@@ -9,3 +9,4 @@ export const LOGIN_FAIL = 'LOGGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const GET_BOOKS = 'GET_BOOKS';
 export const BOOKS_ERROR = 'BOOKS_ERROR';
+export const CLEAR_BOOKS = 'CLEAR_BOOKS';

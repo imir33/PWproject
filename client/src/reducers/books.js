@@ -1,4 +1,4 @@
-import { GET_BOOKS, BOOKS_ERROR } from '../actions/types';
+import { GET_BOOKS, BOOKS_ERROR, CLEAR_BOOKS } from '../actions/types';
 
 const initialState = {
   books: null,
@@ -21,6 +21,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         error: payload,
+        loading: false,
+      };
+    case CLEAR_BOOKS:
+      return {
+        ...state,
+        books: null,
+        friends: [],
         loading: false,
       };
     default:
