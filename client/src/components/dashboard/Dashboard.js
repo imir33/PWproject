@@ -28,12 +28,18 @@ const Dashboard = ({
           <Link to='/add-new-book' className='btn btn-primary m-1'>
             Add a New Book
           </Link>
+          <Link to='/add-friend' className='btn btn-primary m-1'>
+            Add a Friend
+          </Link>
         </Fragment>
       ) : (
         <Fragment>
           <p>You have no books added yet to your account</p>
           <Link to='/add-new-book' className='btn btn-primary m-1'>
             Add a New Book
+          </Link>
+          <Link to='/add-friend' className='btn btn-primary m-1'>
+            Add a Friend
           </Link>
         </Fragment>
       )}

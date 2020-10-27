@@ -8,7 +8,7 @@ const DashboardActions = () => {
         <i class='fas fa-book-open text-primary'></i> Add New Book
       </Link>
       <Link to='/add-friend' class='btn'>
-        <i class='fas fa-user text-primary'></i> Add Friends
+        <i class='fas fa-user text-primary'></i> Add Friend
       </Link>
     </div>
   );

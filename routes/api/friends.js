@@ -2,6 +2,7 @@ const e = require('express');
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
+const { check, validationResult } = require('express-validator');
 
 const User = require('../../models/User');
 const Book = require('../../models/Book');
@@ -24,42 +25,47 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// @route    PUT api/friends/request/:email
+// @route    PUT api/friends/request/
 // @desc     Add friend by email
 // @access   Private
-router.put('/request/:email', auth, async (req, res) => {
-  try {
-    const newFriend = await User.findOne({ email: req.params.email }).select(
-      '-password'
-    );
+router.put(
+  '/request',
+  [auth, check('email', 'Please include a valid email').isEmail()],
+  async (req, res) => {
+    try {
+      const email = req.body.email;
+      console.log(email);
 
-    // Check if User exists
-    if (!newFriend) {
-      return res.status(404).json({ msg: 'User not found' });
+      const newFriend = await User.findOne({ email }).select('-password');
+
+      // Check if User exists
+      if (!newFriend) {
+        return res.status(404).json({ msg: 'User not found' });
+      }
+
+      const user = await User.findById(req.user.id).select('-password');
+
+      // Check if is not already friend of user
+      if (
+        user.friends.some((friend) => friend.user.toString() === newFriend.id)
+      ) {
+        return res.status(400).json({ msg: 'User already a friend' });
+      }
+      user.friends.push({ user: newFriend.id });
+
+      // Add current user to the newFried friends list
+      newFriend.friends.push({ user: user.id });
+
+      await user.save();
+      await newFriend.save();
+
+      res.json(user.friends);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
     }
-
-    const user = await User.findById(req.user.id).select('-password');
-
-    // Check if is not already friend of user
-    if (
-      user.friends.some((friend) => friend.user.toString() === newFriend.id)
-    ) {
-      return res.status(400).json({ msg: 'User already a friend' });
-    }
-    user.friends.push({ user: newFriend.id });
-
-    // Add current user to the newFried friends list
-    newFriend.friends.push({ user: user.id });
-
-    await user.save();
-    await newFriend.save();
-
-    res.json(user.friends);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
   }
-});
+);
 
 // @route    DELETE api/friends/delete/:id
 // @desc     Delete friend by id

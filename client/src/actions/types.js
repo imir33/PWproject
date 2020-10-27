@@ -10,3 +10,5 @@ export const LOGOUT = 'LOGOUT';
 export const GET_BOOKS = 'GET_BOOKS';
 export const BOOKS_ERROR = 'BOOKS_ERROR';
 export const CLEAR_BOOKS = 'CLEAR_BOOKS';
+export const ADD_FRIEND = 'ADD_FRIEND';
+export const ADD_FRIEND_ERROR = 'ADD_FRIEND_ERROR';

@@ -7,6 +7,7 @@ import Login from './components/auth/Login';
 import Alert from './components/layout/Alert';
 import Dashboard from './components/dashboard/Dashboard';
 import AddNewBook from './components/book-form/AddNewBook';
+import AddFriend from './components/friends/AddFriend';
 import PrivateRoute from './components/routing/PrivateRoute';
 
 // Redux
@@ -38,6 +39,7 @@ const App = () => {
               <Route exact path='/login' component={Login} />
               <PrivateRoute exact path='/dashboard' component={Dashboard} />
               <PrivateRoute exact path='/add-new-book' component={AddNewBook} />
+              <PrivateRoute exact path='/add-friend' component={AddFriend} />
             </Switch>
           </section>
         </Fragment>

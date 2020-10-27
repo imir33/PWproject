@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { connect, connnect } from 'react-redux';
+import { connect } from 'react-redux';
 import { addNewBook } from '../../actions/books';
 
 const AddNewBook = ({ addNewBook, history }) => {
@@ -132,7 +132,7 @@ const AddNewBook = ({ addNewBook, history }) => {
           </Fragment>
         )}
         <input type='submit' className='btn btn-primary my-1' />
-        <a className='btn my-1' href='dashboard.html'>
+        <a className='btn my-1' href='/dashboard'>
           Go Back
         </a>
       </form>
