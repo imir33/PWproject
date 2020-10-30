@@ -80,8 +80,6 @@ router.post(
   }
 );
 
-module.exports = router;
-
 // @route    GET api/users/:id
 // @desc     Get User info by id
 // @access   Private
@@ -99,3 +97,5 @@ router.get('/:id', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+module.exports = router;
