@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
+import DashboardActions from './DashboardActions';
+import Books from './Books';
 import { getBooksOfCurrent } from '../../actions/books';
 
 const Dashboard = ({
@@ -22,25 +24,13 @@ const Dashboard = ({
       <p className='lead'>
         <i className='fas fa-user'></i> Welcome {user && user.name}
       </p>
+      <DashboardActions />
       {books !== null ? (
-        <Fragment>
-          <p>has</p>
-          <Link to='/add-new-book' className='btn btn-primary m-1'>
-            Add a New Book
-          </Link>
-          <Link to='/add-friend' className='btn btn-primary m-1'>
-            Add a Friend
-          </Link>
-        </Fragment>
+        <Books books={books} />
       ) : (
         <Fragment>
           <p>You have no books added yet to your account</p>
-          <Link to='/add-new-book' className='btn btn-primary m-1'>
-            Add a New Book
-          </Link>
-          <Link to='/add-friend' className='btn btn-primary m-1'>
-            Add a Friend
-          </Link>
+          <br />
         </Fragment>
       )}
     </Fragment>
